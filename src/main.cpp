@@ -28,6 +28,18 @@ int main()
     game.DrawBoard();
     //Draw Board
 
+    string input = "0";
+    while(EOF) {
+        // if (game.NextRound()) {
+        //     break;
+        // };
+        cin >> input;
+        if (input == "f") {
+            game.Fire();
+        }
+        game.DrawBoard();
+    }
+
 
     //Game Loop
 

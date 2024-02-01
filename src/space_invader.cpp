@@ -55,8 +55,12 @@ void GameLoop::Fire() {
     switch(casualty) {
         case ALIEN:
             board[get<0>(position)][get<1>(position)] = EMPTY;
+            score += 100;
             break;
-    }
+        case SHIELD:
+            board[get<0>(position)][get<1>(position)] = EMPTY;
+            break;
+    }       
 
 
     //Updates the score
@@ -71,25 +75,32 @@ void GameLoop::DrawBoard() {
         }
         cout << "\n";
     }
+    cout << endl;
 }
 
-void GameLoop::NextRound() {
+int GameLoop::NextRound() {
+
     // Check last row if there is an alien there
     for (int j = 0; j < BOARD_SIZE; ++j) {
-        if (board[BOARD_SIZE - 1][j] == 1) {
+        if (board[BOARD_SIZE - 2][j] == 1) {
             EndGame();
+            return 1;
         }
-        return;
+        break;
     }
     
 
     //Bottom to top. Don't inclued player row [last row]
     //No need to iterate through first row
-    for (int i = BOARD_SIZE - 2; i >= 0; --i) {
+    for (int i = BOARD_SIZE - 2; i > 0; --i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
             board[i][j] = board[i - 1][j];
+            board[i - 1][j] = 0;
         }
     }
+    return 0;
 }
 
-void GameLoop::EndGame() {}
+void GameLoop::EndGame() {
+    cout << "You Lose" << endl;
+}

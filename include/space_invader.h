@@ -47,7 +47,7 @@ class GameLoop {
          * Check if all enemy is killed and ends game
          * Check if enemy has reached the bottom board
          */
-        void NextRound();
+        int NextRound();
 
         /**
          * @brief 
