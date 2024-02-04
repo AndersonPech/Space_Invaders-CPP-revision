@@ -17,7 +17,7 @@ GameLoop::GameLoop() {
     //Aliens
     for (int i = 0; i < BOARD_SIZE/2; ++i)
     {
-        for (int j = 0; j < BOARD_SIZE; ++j)
+        for (int j = 0; j < 2*BOARD_SIZE/3; ++j)
         {
             board[i][j] = ALIEN;
         }
@@ -89,13 +89,31 @@ int GameLoop::NextRound() {
         break;
     }
     
+    bool shift_right = false;
+    //Iterate through last column
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        if (board[BOARD_SIZE - 1][i] != 1) {
+            shift_right = true;
+        }
+    } 
 
+    //Shift right
+    //Shift down
     //Bottom to top. Don't inclued player row [last row]
     //No need to iterate through first row
-    for (int i = BOARD_SIZE - 2; i > 0; --i) {
-        for (int j = 0; j < BOARD_SIZE; ++j) {
-            board[i][j] = board[i - 1][j];
-            board[i - 1][j] = 0;
+    if (shift_right) {
+         for (int i = BOARD_SIZE - 1; i >= 0 ; --i) {
+            for (int j = BOARD_SIZE - 1; j > 0; --j) {
+                board[i][j] = board[i][j - 1];
+                board[i][j - 1] = 0;
+            }
+         }
+    } else {
+        for (int i = BOARD_SIZE - 2; i > 0; --i) {
+            for (int j = 0; j < BOARD_SIZE; ++j) {
+                board[i][j] = board[i - 1][j];
+                board[i - 1][j] = 0;
+            }
         }
     }
     return 0;

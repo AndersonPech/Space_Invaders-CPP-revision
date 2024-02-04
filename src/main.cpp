@@ -35,7 +35,7 @@ int main()
         // };
         cin >> input;
         if (input == "f") {
-            game.Fire();
+            game.NextRound();
         }
         game.DrawBoard();
     }
