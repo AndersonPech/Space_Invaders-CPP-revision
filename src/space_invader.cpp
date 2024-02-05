@@ -38,6 +38,14 @@ GameLoop::GameLoop() {
     score = 0;
 };
 
+GameLoop::~GameLoop() {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        delete[] board[i];
+    }
+
+    delete[] board;
+}
+
 void GameLoop::Fire() {
     // Goes up the matrix and find first impact
     int casualty = 0;
@@ -96,6 +104,9 @@ int GameLoop::NextRound() {
             shift_right = true;
         }
     } 
+
+    bool shift_left = false;
+    //
 
     //Shift right
     //Shift down

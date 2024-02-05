@@ -13,8 +13,10 @@ class GameLoop {
         int pos; 
         int health;
         int score;  // alien = 100 points
+        int x_pos;
 
         GameLoop();
+        ~GameLoop();
 
         /**
          * @brief 
