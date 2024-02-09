@@ -14,6 +14,9 @@ class GameLoop {
         int health;
         int score;  // alien = 100 points
         int x_pos;
+        int tick;
+        int counter;
+        bool next_line;
 
         GameLoop();
         ~GameLoop();

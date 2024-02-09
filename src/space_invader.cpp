@@ -32,10 +32,11 @@ GameLoop::GameLoop() {
     //Player
     board[BOARD_SIZE - 1][BOARD_SIZE /2] = PLAYER;
 
-
+    counter = 0;
     health = 3; // If hit 3 times then game ends
     pos = BOARD_SIZE/2;
     score = 0;
+    next_line = false;
 };
 
 GameLoop::~GameLoop() {
@@ -96,22 +97,20 @@ int GameLoop::NextRound() {
         }
         break;
     }
+
+   
     
     bool shift_right = false;
     //Iterate through last column
     for (int i = 0; i < BOARD_SIZE; ++i) {
         if (board[BOARD_SIZE - 1][i] != 1) {
             shift_right = true;
+            next_line = true;
+            break;
         }
     } 
 
-    bool shift_left = false;
-    //
-
     //Shift right
-    //Shift down
-    //Bottom to top. Don't inclued player row [last row]
-    //No need to iterate through first row
     if (shift_right) {
          for (int i = BOARD_SIZE - 1; i >= 0 ; --i) {
             for (int j = BOARD_SIZE - 1; j > 0; --j) {
@@ -119,14 +118,25 @@ int GameLoop::NextRound() {
                 board[i][j - 1] = 0;
             }
          }
-    } else {
-        for (int i = BOARD_SIZE - 2; i > 0; --i) {
-            for (int j = 0; j < BOARD_SIZE; ++j) {
-                board[i][j] = board[i - 1][j];
-                board[i - 1][j] = 0;
-            }
+    }
+
+    //Shift down
+    for (int i = BOARD_SIZE - 2; i > 0; --i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            board[i][j] = board[i - 1][j];
+            board[i - 1][j] = 0;
         }
     }
+    
+
+    //Shift left
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE - 1; ++j) {
+            board[i][j] = board[i][j + 1];
+            board[i][j + 1] = 0;
+        }
+    }
+    
     return 0;
 }
 
