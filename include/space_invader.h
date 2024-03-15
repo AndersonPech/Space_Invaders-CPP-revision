@@ -1,6 +1,7 @@
+#include "constant.h"
+
 #ifndef GAMELOOP_H
 #define GAMELOOP_H
-
 
 class GameLoop {
     public: 
@@ -16,7 +17,7 @@ class GameLoop {
         int x_pos;
         int tick;
         int counter;
-        bool next_line;
+        direction direct;
 
         GameLoop();
         ~GameLoop();
@@ -53,6 +54,24 @@ class GameLoop {
          * Check if enemy has reached the bottom board
          */
         int NextRound();
+
+        /**
+         * @brief 
+         * Shift Down.
+         */
+        void ShiftDown();
+        
+        /**
+         * @brief 
+         * Shift Left
+         */
+        void ShiftLeft();
+
+        /**
+         * @brief 
+         * Shift Right
+         */
+        void ShiftRight();
 
         /**
          * @brief 

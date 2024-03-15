@@ -6,3 +6,9 @@
 
 #define POSITIVE_BOUND 3
 #define NEGATIVE_BOUND -3
+
+enum direction
+{
+    left,
+    right
+}; 

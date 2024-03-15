@@ -24,8 +24,9 @@ int main()
 {
     //Initialise Game
     GameLoop game = GameLoop();
-
+    game.ShiftRight();
     game.DrawBoard();
+
     //Draw Board
 
     string input = "0";

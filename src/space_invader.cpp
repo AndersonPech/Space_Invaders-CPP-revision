@@ -1,7 +1,6 @@
 #include <iostream>
 #include <tuple>
 
-#include "constant.h"
 #include "space_invader.h"
 
 
@@ -36,7 +35,7 @@ GameLoop::GameLoop() {
     health = 3; // If hit 3 times then game ends
     pos = BOARD_SIZE/2;
     score = 0;
-    next_line = false;
+    direct = direction::right;
 };
 
 GameLoop::~GameLoop() {
@@ -72,9 +71,6 @@ void GameLoop::Fire() {
     }       
 
 
-    //Updates the score
-
-
 };
 
 void GameLoop::DrawBoard() {
@@ -87,56 +83,78 @@ void GameLoop::DrawBoard() {
     cout << endl;
 }
 
-int GameLoop::NextRound() {
+void GameLoop::ShiftDown() {
+    for (int i = BOARD_SIZE - 1; i > 0; --i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            if ((board[i][j] == 2 && board[i - 1][j] != 1) || board[i - 1][j] == 2) continue;
+            if ((board[i][j] == 3 && board[i - 1][j] != 1) || board[i - 1][j] == 3) continue;
+            board[i][j] = board[i - 1][j];
+            board[i - 1][j] = 0;
+        }
+    }
+}
 
-    // Check last row if there is an alien there
+
+void GameLoop::ShiftLeft() {
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE - 1; ++j) {
+            if (board[i][j + 1] == 2 || board[i][j] == 2) continue;
+            if (board[i][j + 1] == 3 || board[i][j] == 3) continue;
+            board[i][j] = board[i][j + 1];
+            board[i][j + 1] = 0;
+        }
+    }
+}
+
+void GameLoop::ShiftRight() {
+    for (int i = BOARD_SIZE - 1; i >= 0 ; --i) {
+        for (int j = BOARD_SIZE - 1; j > 0; --j) {
+            if (board[i][j - 1] == 2 || board[i][j] == 2) continue;
+            if (board[i][j - 1] == 3 || board[i][j] == 3) continue;
+            board[i][j] = board[i][j - 1];
+            board[i][j - 1] = 0;
+        }
+    }
+}
+
+
+int GameLoop::NextRound() {
+    // Check second last row if there is an alien there
     for (int j = 0; j < BOARD_SIZE; ++j) {
-        if (board[BOARD_SIZE - 2][j] == 1) {
+        if (board[BOARD_SIZE - 1][j] == 1) {
             EndGame();
             return 1;
         }
         break;
     }
-
-   
     
-    bool shift_right = false;
+   
     //Iterate through last column
     for (int i = 0; i < BOARD_SIZE; ++i) {
-        if (board[BOARD_SIZE - 1][i] != 1) {
-            shift_right = true;
-            next_line = true;
-            break;
+        if (board[i][BOARD_SIZE - 1] == 1) {
+            ShiftDown();
+            ShiftLeft();
+            direct = direction::left;
+            return 0;
         }
     } 
 
-    //Shift right
-    if (shift_right) {
-         for (int i = BOARD_SIZE - 1; i >= 0 ; --i) {
-            for (int j = BOARD_SIZE - 1; j > 0; --j) {
-                board[i][j] = board[i][j - 1];
-                board[i][j - 1] = 0;
-            }
-         }
-    }
-
-    //Shift down
-    for (int i = BOARD_SIZE - 2; i > 0; --i) {
-        for (int j = 0; j < BOARD_SIZE; ++j) {
-            board[i][j] = board[i - 1][j];
-            board[i - 1][j] = 0;
-        }
-    }
-    
-
-    //Shift left
+    //Iterate through first column
     for (int i = 0; i < BOARD_SIZE; ++i) {
-        for (int j = 0; j < BOARD_SIZE - 1; ++j) {
-            board[i][j] = board[i][j + 1];
-            board[i][j + 1] = 0;
+        if (board[i][0] == 1) {
+            ShiftDown();
+            ShiftRight();
+            direct = direction::right;
+            return 0;
         }
+    } 
+
+    if (direct == direction::right) {
+        ShiftRight();
+    } else {
+        ShiftLeft();
     }
-    
+
     return 0;
 }
 
