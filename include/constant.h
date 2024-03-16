@@ -12,3 +12,10 @@ enum direction
     left,
     right
 }; 
+
+enum PlayerMovement 
+{
+    playerLeft,
+    playerRight,
+    shoot
+};

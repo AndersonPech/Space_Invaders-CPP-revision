@@ -11,10 +11,9 @@ class GameLoop {
         // 2 = shield 
         // 3 = player
         int **board;
-        int pos; 
         int health;
         int score;  // alien = 100 points
-        int x_pos;
+        int player_position; //Location of player (Make set if need y axis)
         int tick;
         int counter;
         direction direct;
@@ -26,7 +25,7 @@ class GameLoop {
          * @brief 
          *  Detects if firing from position hits any targets
          */
-        void Fire();
+        void Fire(int pos);
 
 
         /**
@@ -37,15 +36,16 @@ class GameLoop {
 
         /**
          * @brief 
+         * Moves the player
+         */
+        void MovePlayer(PlayerMovement movement);
+
+        
+        /**
+         * @brief 
          * Resets the board. Resets all variables
          */
         void ResetBoard();
-
-        /**
-         * @brief 
-         * Enemy Attacks. Randomise area to attack (within limit of player)
-         */
-        void EnemyAttack();
 
         /**
          * @brief 

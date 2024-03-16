@@ -30,14 +30,22 @@ int main()
     //Draw Board
 
     string input = "0";
+    PlayerMovement movement;
     while(EOF) {
-        // if (game.NextRound()) {
-        //     break;
-        // };
         cin >> input;
         if (input == "f") {
             game.NextRound();
+        } else if (input == "a") {
+            movement = PlayerMovement::playerLeft;
+            game.MovePlayer(movement);
+        } else if (input == "d") {
+            movement = PlayerMovement::playerRight;
+            game.MovePlayer(movement);
+        } else if (input ==  "w") {
+            movement = PlayerMovement::shoot;
+            game.MovePlayer(movement);
         }
+
         game.DrawBoard();
     }
 

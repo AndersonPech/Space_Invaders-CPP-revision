@@ -30,10 +30,10 @@ GameLoop::GameLoop() {
 
     //Player
     board[BOARD_SIZE - 1][BOARD_SIZE /2] = PLAYER;
+    player_position = BOARD_SIZE / 2;
 
     counter = 0;
     health = 3; // If hit 3 times then game ends
-    pos = BOARD_SIZE/2;
     score = 0;
     direct = direction::right;
 };
@@ -42,19 +42,18 @@ GameLoop::~GameLoop() {
     for (int i = 0; i < BOARD_SIZE; ++i) {
         delete[] board[i];
     }
-
     delete[] board;
 }
 
-void GameLoop::Fire() {
+void GameLoop::Fire(int pos) {
     // Goes up the matrix and find first impact
     int casualty = 0;
     tuple <int, int> position = make_tuple(0,0);
-    for (int i = 0; i < BOARD_SIZE; ++i) {
-        if (board[pos][i] != 0) {
-            casualty = board[pos][i];
-            get<0>(position) = pos;
-            get<1>(position) = i;
+    for (int i = BOARD_SIZE - 2; i >= 0; --i) {
+        if (board[i][pos] != 0) {
+            casualty = board[i][pos];
+            get<0>(position) = i;
+            get<1>(position) = pos;
             break;
         }
     }
@@ -115,6 +114,29 @@ void GameLoop::ShiftRight() {
             board[i][j - 1] = 0;
         }
     }
+}
+
+void GameLoop::MovePlayer(PlayerMovement movement) {
+    switch(movement) {
+        case(PlayerMovement::playerLeft):
+            if (player_position - 1 >= 0) {
+                board[BOARD_SIZE - 1][player_position - 1] = PLAYER;
+                board[BOARD_SIZE - 1][player_position] = EMPTY;
+                player_position = player_position - 1;
+            }
+            break;
+        case(PlayerMovement::playerRight):
+            if (player_position + 1 < BOARD_SIZE) {
+                board[BOARD_SIZE - 1][player_position + 1] = PLAYER;
+                board[BOARD_SIZE - 1][player_position] = EMPTY;
+                player_position = player_position + 1;
+            }
+            break;
+        case(PlayerMovement::shoot):
+            Fire(player_position);
+        default:
+            break;
+    }    
 }
 
 
