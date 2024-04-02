@@ -16,6 +16,8 @@ class GameLoop {
         int player_position; //Location of player (Make set if need y axis)
         int tick;
         int counter;
+        int num_aliens;
+        int aliens_shot = 0;
         direction direct;
 
         GameLoop();
