@@ -57,7 +57,7 @@ void GameLoop::ShootingAnimation(int position, int impact) {
         for (int i = BOARD_SIZE - 3; i > impact; --i) {
             board[previous][position] = 0;
             board[i][position] = 4;
-            usleep(300000);
+            usleep(3000);
             previous = i;
             DrawBoard();
         }
@@ -173,7 +173,7 @@ int GameLoop::NextRound() {
         cout << "You've Won!!!";
         return 1;
     }
-    
+
     for (int j = 0; j < BOARD_SIZE; ++j) {
         if (board[BOARD_SIZE - 1][j] == ALIEN) {
             EndGame();
