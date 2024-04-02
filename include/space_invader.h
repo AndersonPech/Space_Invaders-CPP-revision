@@ -78,6 +78,8 @@ class GameLoop {
          * Ends the game
          */
         void EndGame();
+
+        void ShootingAnimation(int position, int impact); 
 };
 
 #endif

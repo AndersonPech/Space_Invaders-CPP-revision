@@ -1,10 +1,13 @@
 #include <iostream>
 #include <tuple>
+#include <unistd.h>  
+#include <mutex>
 
 #include "space_invader.h"
 
 
 using namespace std;
+
 
 GameLoop::GameLoop() {
     board = new int*[BOARD_SIZE];
@@ -45,10 +48,28 @@ GameLoop::~GameLoop() {
     delete[] board;
 }
 
+void GameLoop::ShootingAnimation(int position, int impact) {
+        int previous = BOARD_SIZE - 2; //Second last row. Skips row of player
+        board[previous][position] = FIRE; //Sets it to FIRE
+        DrawBoard();
+        
+        for (int i = BOARD_SIZE - 3; i > impact; --i) {
+            board[previous][position] = 0;
+            board[i][position] = 4;
+            usleep(300000);
+            previous = i;
+            DrawBoard();
+        }
+
+        board[previous][position] = 0;
+
+};
+
 void GameLoop::Fire(int pos) {
     // Goes up the matrix and find first impact
     int casualty = 0;
     tuple <int, int> position = make_tuple(0,0);
+    int prev = 0;
     for (int i = BOARD_SIZE - 2; i >= 0; --i) {
         if (board[i][pos] != 0) {
             casualty = board[i][pos];
@@ -57,6 +78,8 @@ void GameLoop::Fire(int pos) {
             break;
         }
     }
+
+    ShootingAnimation(pos, get<0>(position));
 
     //Matches the casualty, updates board
     switch(casualty) {
@@ -68,6 +91,8 @@ void GameLoop::Fire(int pos) {
             board[get<0>(position)][get<1>(position)] = EMPTY;
             break;
     }       
+
+    DrawBoard();
 
 
 };
@@ -143,11 +168,10 @@ void GameLoop::MovePlayer(PlayerMovement movement) {
 int GameLoop::NextRound() {
     // Check second last row if there is an alien there
     for (int j = 0; j < BOARD_SIZE; ++j) {
-        if (board[BOARD_SIZE - 1][j] == 1) {
+        if (board[BOARD_SIZE - 1][j] == ALIEN) {
             EndGame();
             return 1;
         }
-        break;
     }
     
    

@@ -3,6 +3,7 @@
 #define EMPTY 0
 #define SHIELD 2
 #define PLAYER 3
+#define FIRE 4
 
 #define POSITIVE_BOUND 3
 #define NEGATIVE_BOUND -3

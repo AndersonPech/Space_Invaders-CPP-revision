@@ -1,8 +1,18 @@
 #include <iostream>
+#include <unistd.h>  
 #include "space_invader.h"
 
-using namespace std;
+#include <condition_variable> 
+#include <iostream> 
+#include <mutex> 
+#include <thread> 
 
+using namespace std;
+condition_variable cv;
+mutex m;
+GameLoop game = GameLoop();
+bool ready = true;
+void user_input();
 
 /**
  * @brief Simple Invader Game
@@ -20,35 +30,60 @@ using namespace std;
  *          - Aliens move side to side
  *          
  */
-int main()
-{
-    //Initialise Game
-    GameLoop game = GameLoop();
-    game.ShiftRight();
-    game.DrawBoard();
 
-    //Draw Board
 
+
+
+void nextGame() {
+    while(1) {
+        sleep(1);
+        unique_lock lk(m);
+        cv.wait(lk, [] { return ready; });
+        if (game.NextRound()) return;
+        game.DrawBoard();
+    }
+}
+
+void userInput() {
     string input = "0";
     PlayerMovement movement;
     while(EOF) {
-        cin >> input;
-        if (input == "f") {
-            game.NextRound();
-        } else if (input == "a") {
+        input = getchar(); 
+        lock_guard lck(m);
+        ready = false;
+        if (input == "a") {
             movement = PlayerMovement::playerLeft;
             game.MovePlayer(movement);
         } else if (input == "d") {
             movement = PlayerMovement::playerRight;
             game.MovePlayer(movement);
-        } else if (input ==  "w") {
+        } else if (input == " ") {
             movement = PlayerMovement::shoot;
             game.MovePlayer(movement);
-        }
-
-        game.DrawBoard();
+        } 
+        ready = true;
+        cv.notify_all();       
     }
+    return;
+}
 
+int main()
+{
+    //Initialise Game
+    game.ShiftRight();
+    game.DrawBoard();
+
+
+    thread t1 (nextGame);
+    thread t2 (userInput);
+
+
+    t1.join();
+    t2.join();   
+
+
+    t1.detach();
+    t2.detach();
 
     //Game Loop
 
