@@ -22,7 +22,6 @@ GameLoop::GameLoop() {
         for (int j = 0; j < 2*BOARD_SIZE/3; ++j)
         {
             board[i][j] = ALIEN;
-            num_aliens++;
         }
     }
 
@@ -57,7 +56,7 @@ void GameLoop::ShootingAnimation(int position, int impact) {
         for (int i = BOARD_SIZE - 3; i > impact; --i) {
             board[previous][position] = 0;
             board[i][position] = 4;
-            usleep(3000);
+            usleep(150000);
             previous = i;
             DrawBoard();
         }
@@ -87,7 +86,6 @@ void GameLoop::Fire(int pos) {
         case ALIEN:
             board[get<0>(position)][get<1>(position)] = EMPTY;
             score += 100;
-            aliens_shot++;
             break;
         case SHIELD:
             board[get<0>(position)][get<1>(position)] = EMPTY;
@@ -169,8 +167,8 @@ void GameLoop::MovePlayer(PlayerMovement movement) {
 
 int GameLoop::NextRound() {
     // Check second last row if there is an alien there
-    if (aliens_shot == num_aliens) {
-        cout << "You've Won!!!";
+    if (AllEnemiesKilled()) {
+        cout << "You Won" << endl;
         return 1;
     }
 
@@ -209,6 +207,17 @@ int GameLoop::NextRound() {
     }
 
     return 0;
+}
+
+int GameLoop::AllEnemiesKilled() {
+    for (int i  = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            if (board[i][j] == 1) {
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
 
 void GameLoop::EndGame() {
