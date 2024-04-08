@@ -209,6 +209,9 @@ int GameLoop::NextRound() {
     return 0;
 }
 
+/**
+ * Iterates through board to see if there are any enemies left
+*/
 int GameLoop::AllEnemiesKilled() {
     for (int i  = 0; i < BOARD_SIZE; ++i) {
         for (int j = 0; j < BOARD_SIZE; ++j) {
